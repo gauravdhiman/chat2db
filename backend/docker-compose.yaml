@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dataspeak
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.postgres:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --port 3000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/dataspeak
+    depends_on:
+      - db
