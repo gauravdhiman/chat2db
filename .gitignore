@@ -1,12 +1,27 @@
+# Python virtual environment
 .venv*
+
+# Environment variables
 .env
+
+# Cursor rules
 .cursorrules
+
+# SQLite database
 *.db
 *.db-journal
+
+# Node.js modules
 **/node_modules
 **/dist
 **/build
 
+# Docker volumes
+.postgres
+.pgadmin
+
+# Next.js build output
+.next
 
 # Logs
 logs
