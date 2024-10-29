@@ -2,7 +2,9 @@ fastapi==0.110.0
 uvicorn==0.27.1
 sqlalchemy==2.0.27
 python-dotenv==1.0.1
-phi-agent==0.1.0
+phidata
 pydantic==2.6.3
 python-multipart==0.0.9
 asyncpg==0.29.0
+openai
+psycopg2-binary
