@@ -1,11 +1,6 @@
 from phi.agent import Agent
 from phi.model.openai import OpenAIChat
-# from phi.tools.duckduckgo import DuckDuckGo
-# from phi.tools.yfinance import YFinanceTools
-# from phi.knowledge.base import DatabaseKnowledgeBase
 from phi.tools.postgres import PostgresTools
-# from phi.vectordb.pgvector import PgVector2
-# from phi.embedder.openai import OpenAIEmbedder
 import os
 from ai.data_analyst_response import DataAnalystResponseObj
 import dotenv
@@ -45,62 +40,3 @@ data_analysis_agent = Agent(
     response_model=DataAnalystResponseObj,
     structured_outputs=True
 )
-# agent.print_response("List the tables in the database", markdown=True)
-
-# # Load the knowledge base (comment out after first run)
-# knowledge_base.load()
-
-# # Create the data analysis agent
-# data_analysis_agent = Agent(
-#     name="DataAnalysisAgent",
-#     role="Analyze data and generate insights",
-#     model=OpenAIChat(model="gpt-4"),
-#     tools=[DuckDuckGo(), YFinanceTools()],
-#     knowledge_base=knowledge_base,
-#     instructions=[
-#         "Analyze data provided by the user",
-#         "Generate insights based on the data",
-#         "Suggest appropriate visualizations for the data",
-#         "Use the DuckDuckGo search tool if you need additional information",
-#         "Use YFinance tools for financial data",
-#     ],
-#     show_tool_calls=True,
-# )
-
-# Create the chart generation agent
-# chart_generation_agent = Agent(
-#     name="ChartGenerationAgent",
-#     role="Create chart configurations for data visualizations",
-#     model=OpenAIChat(model="gpt-4"),
-#     knowledge_base=knowledge_base,
-#     instructions=[
-#         "Generate chart configurations based on the data and requirements provided",
-#         "Use recharts library syntax for creating chart configurations",
-#         "Provide explanations for the chart configurations you generate",
-#     ],
-#     show_tool_calls=True,
-# )
-
-# # Create an agent team
-# agent_team = Agent(
-#     name="DataVisualizationTeam",
-#     team=[data_analysis_agent, chart_generation_agent],
-#     instructions=[
-#         "Collaborate to analyze data and create appropriate visualizations",
-#         "Use tables to display data when appropriate",
-#         "Always include sources for information",
-#     ],
-#     show_tool_calls=True,
-# )
-
-# # Function to get a response from the data analysis agent
-# async def get_data_analysis_response(message: str) -> str:
-#     return await data_analysis_agent.run(message)
-
-# # Function to get a response from the chart generation agent
-# async def get_chart_generation_response(message: str) -> str:
-#     return await chart_generation_agent.run(message)
-
-# # Function to get a response from the agent team
-# async def get_team_response(message: str) -> str:
-#     return await agent_team.run(message)

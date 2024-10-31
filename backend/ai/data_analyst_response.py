@@ -14,7 +14,7 @@ class ChartType(str, Enum):
     SCATTER = "scatter"
 
 class DataPoint(BaseModel):
-    x: Union[str, int, float] = Field(..., description="X-axis value depending on the data for X-Label.")
+    x: Union[str, int, float] = Field(..., description="X-axis value depending on the data for X-Label. Always sort by x-axis value.")
     y: Union[str, int, float] = Field(..., description="Y-axis value depending on the data for Y-Label.")
 
 class ChartConfig(BaseModel):

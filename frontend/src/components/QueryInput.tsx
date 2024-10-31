@@ -1,24 +1,32 @@
 'use client';
-
-import { useState } from 'react';
+import React, { useState } from 'react'
 import { Search } from 'lucide-react';
-
 interface QueryInputProps {
-  onSubmit: (query: string) => void;
-  isLoading: boolean;
+  onSubmit: (query: string) => Promise<void>
+  isLoading: boolean
 }
 
-export function QueryInput({ onSubmit, isLoading }: QueryInputProps) {
-  const [query, setQuery] = useState('');
+export default function QueryInput({ onSubmit, isLoading }: QueryInputProps) {
+  const [query, setQuery] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      onSubmit(query.trim());
-    }
-  };
+    e.preventDefault()
+    onSubmit(query)
+  }
 
   return (
+    // <form onSubmit={handleSubmit} className="mb-4">
+    //   <input
+    //     type="text"
+    //     value={query}
+    //     onChange={(e) => setQuery(e.target.value)}
+    //     placeholder="Enter your query..."
+    //     className="w-full p-2 border rounded"
+    //   />
+    //   <button type="submit" className="mt-2 px-4 py-2 bg-blue-500 text-white rounded" disabled={isLoading}>
+    //     Submit
+    //   </button>
+    // </form>
     <form onSubmit={handleSubmit} className="w-full max-w-3xl">
       <div className="relative">
         <input
@@ -39,5 +47,5 @@ export function QueryInput({ onSubmit, isLoading }: QueryInputProps) {
         </button>
       </div>
     </form>
-  );
+  )
 }

@@ -53,7 +53,7 @@ export function QueryResult({ data, error, loading }: QueryResultProps) {
     );
   }
 
-  if (!data) return null;
+  if (!data || !data.chart_config) return null;
 
   if (data?.response_type === 'chart') {
     return <ChartDisplay {...data.chart_config} />;

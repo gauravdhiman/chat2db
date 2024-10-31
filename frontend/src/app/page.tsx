@@ -2,7 +2,7 @@
 import React from 'react';
 
 import { Database } from 'lucide-react';
-import { QueryInput } from '../components/QueryInput';
+import QueryInput from '../components/QueryInput';
 import { QueryResult } from '../components/QueryResult';
 import { useQuery } from '../hooks/useQuery';
 

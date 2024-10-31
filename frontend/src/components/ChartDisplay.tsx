@@ -61,6 +61,14 @@ export function ChartDisplay(chartConfig: ChartConfig) {
       margin: { top: 20, right: 15, left: 15, bottom: 15 },
     };
 
+    // Calculate min and max values for Y-axis to dynamically set the domain
+    const yValues = chartConfig.data.map(point => point.y).filter(y => typeof y === 'number');
+    const minY = Math.min(...yValues);
+    const maxY = Math.max(...yValues);
+
+    // Calculate the mean value for the mean line
+    // const meanValue = yValues.reduce((acc, curr) => acc + curr, 0) / yValues.length;
+
     switch (chartConfig.chart_type) {
       case 'line':
         return (
@@ -74,6 +82,7 @@ export function ChartDisplay(chartConfig: ChartConfig) {
             <YAxis
               label={{ value: chartConfig.y_label, angle: -90, position: 'left' }}
               stroke="#9CA3AF"
+              domain={[minY, maxY]} // Dynamically set the domain based on min and max Y values
             />
             <Tooltip 
               contentStyle={{
@@ -85,6 +94,7 @@ export function ChartDisplay(chartConfig: ChartConfig) {
             />
             <Legend />
             <Line type="monotone" dataKey="y" stroke="#3B82F6" strokeWidth={2} dot={{ fill: '#3B82F6' }} />
+            {/* <Line type="monotoneX" dataKey="mean" stroke="#3B82F6" strokeWidth={2} dot={{ fill: '#3B82F6' }} strokeDasharray="5 5" /> Mean line as a dotted line */}
           </LineChart>
         );
 
@@ -100,6 +110,7 @@ export function ChartDisplay(chartConfig: ChartConfig) {
             <YAxis
               label={{ value: chartConfig.y_label, angle: -90, position: 'left' }}
               stroke="#9CA3AF"
+              domain={[minY, maxY]} // Dynamically set the domain based on min and max Y values
             />
             <Tooltip
               contentStyle={{
@@ -155,6 +166,7 @@ export function ChartDisplay(chartConfig: ChartConfig) {
               dataKey="y"
               label={{ value: chartConfig.y_label, angle: -90, position: 'left' }}
               stroke="#9CA3AF"
+              domain={[minY, maxY]} // Dynamically set the domain based on min and max Y values
             />
             <Tooltip
               contentStyle={{
