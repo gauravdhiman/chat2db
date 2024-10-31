@@ -7,7 +7,7 @@ import { QueryResult } from '../components/QueryResult';
 import { useQuery } from '../hooks/useQuery';
 
 export default function Home() {
-  const { data, error, loading, executeQuery } = useQuery();
+  const { responses, error, loading, executeQuery } = useQuery();
 
   return (
     <main className="min-h-screen w-full">
@@ -24,10 +24,10 @@ export default function Home() {
             </p>
           </div>
 
-          <QueryInput onSubmit={executeQuery} isLoading={loading} />
-          <QueryResult data={data} error={error} loading={loading} />
+          <QueryInput onSubmit={executeQuery} isLoading={loading} onCancel={executeQuery.cancel} />
+          <QueryResult responses={responses} error={error} loading={loading} />
 
-          {!data && !error && (
+          {!responses.length && !error && (
             <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl w-full">
               <ExampleCard
                 title="Trend Analysis"

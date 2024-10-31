@@ -32,6 +32,7 @@ data_analysis_agent = Agent(
         For dates, always use short readable format like Jan 1, 2024.
         For numbers, always use short readable format like 1,000,000.
         For customer names, try to keep it short with only first name and last initial.
+        Whenever possible, return appropriate chart type, else markdown, else text as last option. For lists and tables, always make sure to return markdown.
         Always try to see if the query can be answered with best possible chart type else respond as simple text (markdown with tables where appropriate).
         Always respond in given structured format.
         If you think user query is not related to the database or you don't have the data to answer the question, politely and approriately say so.

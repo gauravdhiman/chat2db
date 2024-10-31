@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 interface ChartConfig {
   chart_type: 'line' | 'bar' | 'pie' | 'scatter';
@@ -17,12 +17,31 @@ interface QueryResponse {
   chart_config: ChartConfig | null;
 }
 
+type ExecuteQueryFunction = {
+  (query: string): Promise<void>;
+  cancel: () => void;
+};
+
+interface QueryHistoryItem {
+  query: string;
+  response: QueryResponse;
+  timestamp: number;
+}
+
 export function useQuery() {
-  const [data, setData] = useState<QueryResponse | null>(null);
+  const [responses, setResponses] = useState<QueryHistoryItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const abortController = useRef<AbortController | null>(null);
 
-  const executeQuery = async (query: string) => {
+  const executeQuery = useCallback(async (query: string) => {
+    if (isActive) {
+      abortController.current?.abort();
+    }
+
+    abortController.current = new AbortController();
+    setIsActive(true);
     setLoading(true);
     setError(null);
     
@@ -34,24 +53,44 @@ export function useQuery() {
           'Accept': 'application/json'
         },
         body: JSON.stringify({ query }),
+        signal: abortController.current.signal
       });
 
-      console.log('response > ', response);
       if (!response.ok) {
-        console.log('response not ok > ', response.statusText);
         throw new Error('Failed to fetch data');
       }
 
       const responseData: QueryResponse = await response.json();
-      console.log('response JSON > ', responseData);
-      setData(responseData);
+      setResponses(prev => [{
+        query,
+        response: responseData,
+        timestamp: Date.now()
+      }, ...prev]);
     } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        return;
+      }
       console.error('Error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while processing your query');
     } finally {
+      setIsActive(false);
+      setLoading(false);
+    }
+  }, [isActive]) as ExecuteQueryFunction;
+
+  executeQuery.cancel = () => {
+    if (isActive) {
+      abortController.current?.abort();
+      setIsActive(false);
       setLoading(false);
     }
   };
 
-  return { data, error, loading, executeQuery };
+  return { 
+    responses, 
+    error, 
+    loading, 
+    executeQuery,
+    currentResponse: responses[0]?.response || null
+  };
 }

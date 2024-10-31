@@ -26,7 +26,7 @@ class ChartConfig(BaseModel):
     config: Optional[Dict[str, Any]] = Field(None, description="Additional chart configuration options")
 
 class DataAnalystResponseObj(BaseModel):
-    response_type: ResponseType = Field(..., description="Type of the response (chart or text or markdown)")
+    response_type: ResponseType = Field(..., description="Type of the response (chart or text or markdown).")
     text: Optional[str] = Field(None, description="Text response when response_type is text or markdown")
     chart_config: Optional[ChartConfig] = Field(None, description="Chart configuration when response_type is chart")
 

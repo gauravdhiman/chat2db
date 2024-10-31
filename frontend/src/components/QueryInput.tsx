@@ -1,12 +1,13 @@
 'use client';
 import React, { useState } from 'react'
-import { Search, SendHorizontal } from 'lucide-react';
+import { Search, SendHorizontal, X } from 'lucide-react';
 interface QueryInputProps {
   onSubmit: (query: string) => Promise<void>
   isLoading: boolean
+  onCancel: () => void
 }
 
-export default function QueryInput({ onSubmit, isLoading }: QueryInputProps) {
+export default function QueryInput({ onSubmit, isLoading, onCancel }: QueryInputProps) {
   const [query, setQuery] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -46,11 +47,16 @@ export default function QueryInput({ onSubmit, isLoading }: QueryInputProps) {
           </textarea>
         </div>
         <button
-          type="submit"
-          disabled={isLoading || !query.trim()}
+          type={isLoading ? 'button' : 'submit'}
+          onClick={isLoading ? onCancel : undefined}
+          disabled={!isLoading && !query.trim()}
           className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
         >
-          <SendHorizontal className="w-5 h-5" />
+          {isLoading ? (
+            <X className="w-5 h-5" />
+          ) : (
+            <SendHorizontal className="w-5 h-5" />
+          )}
         </button>
       </div>
     </form>
