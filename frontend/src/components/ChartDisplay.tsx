@@ -29,7 +29,7 @@ interface ChartDisplayProps {
   data: Data;
 }
 
-const COLORS = ['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444'];
+const COLORS = ['#60A5FA', '#34D399', '#F472B6', '#FBBF24', '#A78BFA', '#F87171', '#4ADE80', '#2DD4BF'];
 
 export function ChartDisplay(chartConfig: ChartConfig) {
   // Validate data before rendering
@@ -135,7 +135,31 @@ export function ChartDisplay(chartConfig: ChartConfig) {
               cx="50%"
               cy="50%"
               outerRadius={150}
-              label
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                value,
+                index
+              }) => {
+                const RADIAN = Math.PI / 180;
+                const radius = 25 + innerRadius + (outerRadius - innerRadius);
+                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    className="fill-gray-200 text-sm"
+                    textAnchor={x > cx ? 'start' : 'end'}
+                    dominantBaseline="central"
+                  >
+                    {`${chartConfig.data[index].x} (${value})`}
+                  </text>
+                );
+              }}
             >
               {chartConfig.data.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -146,10 +170,24 @@ export function ChartDisplay(chartConfig: ChartConfig) {
                 backgroundColor: '#1F2937',
                 border: '1px solid #374151',
                 borderRadius: '0.5rem',
-                color: '#fff'
+                padding: '8px 12px',
+                color: '#ffffff',  // Ensuring text is white
+                fontSize: '14px'
+              }}
+              formatter={(value, name) => [value, name]}
+              labelStyle={{
+                color: '#ffffff',
+                fontWeight: 'bold',
+                marginBottom: '4px'
+              }}
+              itemStyle={{
+                color: '#ffffff',  // Making item text white
+                padding: '2px 0'
               }}
             />
-            <Legend />
+            <Legend
+              formatter={(value) => <span className="text-gray-200">{value}</span>}
+            />
           </PieChart>
         );
 

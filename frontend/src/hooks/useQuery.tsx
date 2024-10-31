@@ -25,7 +25,6 @@ export function useQuery() {
   const executeQuery = async (query: string) => {
     setLoading(true);
     setError(null);
-    console.log('NEXT_PUBLIC_BACKEND_API_BASE_URL > ', process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL);
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL}/api/query`, {
