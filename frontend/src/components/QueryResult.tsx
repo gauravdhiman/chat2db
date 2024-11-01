@@ -26,39 +26,31 @@ interface QueryResultProps {
 }
 
 export function QueryResult({ responses = [], error, loading }: QueryResultProps) {
-  console.log('Responses:', responses);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center w-full p-8">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive" className="max-w-4xl mx-auto">
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (!responses.length) return null;
-
   return (
-    <div className="space-y-8">
-      {responses.map((item, index) => {
-        console.log('Rendering item:', item);
-        return (
-          <div key={item.timestamp} className="border rounded-lg p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="text-sm text-muted-foreground mb-2">
-              Query: {item.query}
-            </div>
-            {renderResponse(item.response)}
+    <div className="space-y-8 w-full max-w-6xl mx-auto">
+      {loading && (
+        <div className="border rounded-lg p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center justify-center w-full">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        </div>
+      )}
+
+      {error && (
+        <Alert variant="destructive" className="w-full">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {responses.map((item) => (
+        <div 
+          key={item.timestamp} 
+          className="border rounded-lg p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 w-full"
+        >
+          <div className="text-sm text-muted-foreground mb-2">
+            Query: {item.query}
           </div>
-        );
-      })}
+          {renderResponse(item.response)}
+        </div>
+      ))}
     </div>
   );
 }
@@ -79,14 +71,14 @@ function renderResponse(data: {
   }
 
   if (data.response_type === 'text') {
-    return <div className="max-w-4xl mx-auto p-4 bg-gray-500/10 border border-gray-500/20 rounded-lg">{data.text}</div>;
+    return <div className="w-full p-4 bg-gray-500/10 border border-gray-500/20 rounded-lg">{data.text}</div>;
   }
 
   if (data.response_type === 'markdown') {
     return (
       <ReactMarkdown 
         remarkPlugins={[remarkGfm]}
-        className="prose dark:prose-invert max-w-none p-4"
+        className="prose dark:prose-invert w-full p-4"
       >
         {data.text || ''}
       </ReactMarkdown>

@@ -11,8 +11,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full">
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col items-center gap-8">
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        <div className="flex flex-col items-center gap-8 w-full">
           <div className="text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <Database className="w-8 h-8 text-blue-500" />
