@@ -14,7 +14,8 @@ db_port = os.getenv("DB_PORT")
 
 data_analysis_agent = Agent(
     name="DataAnalysisAgent",
-    model=OpenAIChat(model="gpt-4o-2024-08-06"),
+    # model=OpenAIChat(model="gpt-4o-2024-08-06"),
+    model=OpenAIChat(model="gpt-4o-mini"),
     tools=[
         PostgresTools(
             db_name=db_name,

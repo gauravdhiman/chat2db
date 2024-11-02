@@ -8,7 +8,7 @@ from pydantic import BaseModel
 # from query_processor import QueryProcessor
 from dotenv import load_dotenv
 import os
-from ai.agents import data_analysis_agent
+from ai.data_analysis_agent import data_analysis_agent
 from ai.data_analyst_response import DataAnalystResponseObj
 # Load environment variables
 load_dotenv()
@@ -29,12 +29,12 @@ class QueryRequest(BaseModel):
 
 @app.post("/api/query", response_model=DataAnalystResponseObj)
 async def process_query(request: QueryRequest):
-    # try:
-    response = data_analysis_agent.run(request.query)        
-    return response.content.dict()
-    # except Exception as e:
-    #     print(f"Error processing query: {str(e)}")
-    #     raise HTTPException(status_code=500, detail=str(e))
+    try:
+        response = data_analysis_agent.run(request.query)        
+        return response.content.dict()
+    except Exception as e:
+        print(f"Error processing query: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/health")
 async def health_check():

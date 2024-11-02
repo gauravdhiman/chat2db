@@ -33,7 +33,6 @@ const COLORS = ['#60A5FA', '#34D399', '#F472B6', '#FBBF24', '#A78BFA', '#F87171'
 
 export function ChartDisplay(chartConfig: ChartConfig) {
   // Validate data before rendering
-  console.log('chartConfig in ChartDisplay > ', chartConfig);
   if (!chartConfig.data || !Array.isArray(chartConfig.data) || chartConfig.data.length === 0) {
     return (
       <div className="w-full max-w-4xl mx-auto p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
