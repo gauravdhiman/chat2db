@@ -6,8 +6,9 @@ import {
 
 interface ChartData {
   x: string | number;
-  y: number | string;
-  [key: string]: any; // For additional data points
+  y: {
+    [series: string]: number;
+  };
 }
 
 interface ChartConfig {
@@ -29,7 +30,10 @@ interface ChartDisplayProps {
   data: Data;
 }
 
-const COLORS = ['#60A5FA', '#34D399', '#F472B6', '#FBBF24', '#A78BFA', '#F87171', '#4ADE80', '#2DD4BF'];
+const COLORS = [
+  '#60A5FA', '#34D399', '#F472B6', '#FBBF24', '#A78BFA', 
+  '#F87171', '#4ADE80', '#2DD4BF', '#FB923C', '#818CF8'
+];
 
 export function ChartDisplay(chartConfig: ChartConfig) {
   // Validate data before rendering
@@ -57,16 +61,19 @@ export function ChartDisplay(chartConfig: ChartConfig) {
   const renderChart = () => {
     const commonProps = {
       height: 400,
-      margin: { top: 20, right: 15, left: 15, bottom: 15 },
+      margin: { top: 20, right: 30, left: 50, bottom: 50 },
     };
 
-    // Calculate min and max values for Y-axis to dynamically set the domain
-    const yValues = chartConfig.data.map(point => point.y).filter(y => typeof y === 'number');
-    const minY = Math.min(...yValues);
+    // Calculate min and max values for Y-axis
+    const yValues = chartConfig.data.map(point => Object.values(point.y)).flat();
+    const minY =  Math.min(...yValues);
     const maxY = Math.max(...yValues);
-
-    // Calculate the mean value for the mean line
-    // const meanValue = yValues.reduce((acc, curr) => acc + curr, 0) / yValues.length;
+    
+    // Add padding to the domain to make small variations more visible
+    const yAxisDomain = [
+      minY - Math.max(0.1, minY * 0.1), // Add 10% padding below, but at least 0.1
+      maxY + Math.max(0.1, maxY * 0.1)  // Add 10% padding above, but at least 0.1
+    ];
 
     switch (chartConfig.chart_type) {
       case 'line':
@@ -75,25 +82,58 @@ export function ChartDisplay(chartConfig: ChartConfig) {
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis 
               dataKey="x" 
-              label={{ value: chartConfig.x_label, position: 'bottom' }}
+              label={{ value: chartConfig.x_label, position: 'bottom', offset: 20 }}
               stroke="#9CA3AF"
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              tick={{ fontSize: 12 }}
             />
             <YAxis
-              label={{ value: chartConfig.y_label, angle: -90, position: 'left' }}
+              label={{ value: chartConfig.y_label, angle: -90, position: 'left', offset: 10 }}
               stroke="#9CA3AF"
-              domain={[minY, maxY]} // Dynamically set the domain based on min and max Y values
+              domain={yAxisDomain}
+              tickCount={5} // Force more tick marks
+              allowDecimals={true}
+              tickFormatter={(value) => Number(value).toFixed(1)}
             />
             <Tooltip 
               contentStyle={{
                 backgroundColor: '#1F2937',
                 border: '1px solid #374151',
                 borderRadius: '0.5rem',
-                color: '#fff'
+                color: '#fff',
+                padding: '8px 12px',
               }}
+              formatter={(value, name) => [`${value}`, name]}
+              labelFormatter={(label) => `Date: ${label}`}
             />
-            <Legend />
-            <Line type="monotone" dataKey="y" stroke="#3B82F6" strokeWidth={2} dot={{ fill: '#3B82F6' }} />
-            {/* <Line type="monotoneX" dataKey="mean" stroke="#3B82F6" strokeWidth={2} dot={{ fill: '#3B82F6' }} strokeDasharray="5 5" /> Mean line as a dotted line */}
+            <Legend 
+              verticalAlign="top" 
+              height={36}
+              wrapperStyle={{ paddingBottom: '10px' }}
+            />
+            {Object.keys(chartConfig.data[0].y).map((series, index) => (
+              <Line 
+                key={series} 
+                type="monotone" 
+                dataKey={`y.${series}`}
+                name={series}
+                stroke={COLORS[index % COLORS.length]} 
+                strokeWidth={2.5} // Increased line thickness
+                dot={{ 
+                  fill: COLORS[index % COLORS.length], 
+                  r: 5,
+                  strokeWidth: 2,
+                  stroke: '#1F2937'
+                }}
+                activeDot={{ 
+                  r: 8,
+                  stroke: '#ffffff',
+                  strokeWidth: 2
+                }}
+              />
+            ))}
           </LineChart>
         );
 
@@ -120,7 +160,15 @@ export function ChartDisplay(chartConfig: ChartConfig) {
               }}
             />
             <Legend />
-            <Bar dataKey="y" fill="#3B82F6" />
+            {Object.keys(chartConfig.data[0].y).map((series, index) => (
+              <Bar 
+                key={series} 
+                dataKey={`y.${series}`}
+                name={series}
+                fill={COLORS[index % COLORS.length]}
+                radius={[4, 4, 0, 0]}
+              />
+            ))}
           </BarChart>
         );
 

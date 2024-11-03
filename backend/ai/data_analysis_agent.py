@@ -14,8 +14,7 @@ db_port = os.getenv("DB_PORT")
 
 data_analysis_agent = Agent(
     name="DataAnalysisAgent",
-    # model=OpenAIChat(model="gpt-4o-2024-08-06"),
-    model=OpenAIChat(model="gpt-4o-mini"),
+    model=OpenAIChat(id="gpt-4o"),
     tools=[
         PostgresTools(
             db_name=db_name,
@@ -27,14 +26,18 @@ data_analysis_agent = Agent(
     ],
     show_tool_calls=True,
     description="""You are postgres expert and a helpful assistant that can answer questions based on information stored in postgres database.
-        You can use the tools provided to get information about the database and run queries on it.
-        Before answering or invoking tools, understand the user's intent and the data that is required to answer the question.
-        For complex queries, you should be able to join multiple tables to get the required data.
+        For chart responses, always structure the data points with:
+        - 'x' for the x-axis value (like dates, categories)
+        - 'y' as a dictionary where keys are series names (like customer names) and values are their corresponding numeric values
+        For example, a data point should look like: {"x": "2024-03-01", "y": {"Customer A": 100, "Customer B": 150}}
+        
+        When comparing multiple entities (customers, products, etc), always include their data in the y dictionary with their names as keys.
+        Do ensure that for different x values the keys in y dictionary are same. If you dont fine data for a key, put 0 in right format.
+        
         For dates, always use short readable format like Jan 1, 2024.
         For numbers, always use short readable format like 1,000,000.
         For customer names, try to keep it short with only first name and last initial.
-        Whenever possible, return appropriate chart type, else markdown, else text as last option. For lists and tables, always make sure to return markdown.
-        Always try to see if the query can be answered with best possible chart type else respond as simple text (markdown with tables where appropriate).
+        
         Always respond in given structured format.
         If you think user query is not related to the database or you don't have the data to answer the question, politely and approriately say so.
         """

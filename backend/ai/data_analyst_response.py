@@ -14,16 +14,15 @@ class ChartType(str, Enum):
     SCATTER = "scatter"
 
 class DataPoint(BaseModel):
-    x: Union[str, int, float] = Field(..., description="X-axis value depending on the data for X-Label. Always sort by x-axis value.")
-    y: Union[str, int, float] = Field(..., description="Y-axis value depending on the data for Y-Label.")
+    x: Union[str, int, float] = Field(..., description="X-axis value depending on the data for X-Label")
+    y: Optional[Dict[str, float]] = Field(None, description="Dictionary of data points with keys asname of data point and value as data point value")
 
 class ChartConfig(BaseModel):
     chart_type: ChartType = Field(..., description="Type of the chart to be rendered")
     data: List[DataPoint] = Field(..., description="Array of data points for the chart")
-    title: Optional[str] = Field(None, description="Chart title")
-    x_label: Optional[str] = Field(None, description="X-axis label")
-    y_label: Optional[str] = Field(None, description="Y-axis label")
-    config: Optional[Dict[str, Any]] = Field(None, description="Additional chart configuration options")
+    title: str = Field(..., description="Chart title")
+    x_label: str = Field(..., description="X-axis label")
+    y_label: str = Field(..., description="Y-axis label")
 
 class DataAnalystResponseObj(BaseModel):
     response_type: ResponseType = Field(..., description="Type of the response (chart or text or markdown).")
