@@ -2,7 +2,7 @@ fastapi==0.110.0
 uvicorn==0.27.1
 sqlalchemy==2.0.27
 python-dotenv==1.0.1
-phidata
+phidata@git+https://github.com/gauravdhiman/phidata.git@supporting_structured_output_for_function_calling
 pydantic==2.6.3
 python-multipart==0.0.9
 asyncpg==0.29.0

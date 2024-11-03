@@ -2,7 +2,7 @@
 .venv*
 
 # Environment variables
-.env
+.env*
 
 # Cursor rules
 .cursorrules
@@ -16,9 +16,13 @@
 **/dist
 **/build
 
+# cache files
+*.pyc
+__pycache__
+
 # Docker volumes
-.postgres
-.pgadmin
+**/.postgres*/*
+**/.pgadmin*/*
 
 # Next.js build output
 .next

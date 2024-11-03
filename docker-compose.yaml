@@ -20,11 +20,10 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     command: "uvicorn main:app --host 0.0.0.0 --port 4000 --reload"
     volumes:
-      - ./.venv:/app/.venv
       - ./backend:/app
     ports:
       - "4000:4000"
