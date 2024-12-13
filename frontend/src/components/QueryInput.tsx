@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react'
 import { Search, SendHorizontal, X } from 'lucide-react';
+
 interface QueryInputProps {
   onSubmit: (query: string) => Promise<void>
   isLoading: boolean
@@ -28,23 +29,22 @@ export default function QueryInput({ onSubmit, isLoading, onCancel }: QueryInput
     <form onSubmit={handleSubmit} className="w-full max-w-3xl">
       <div className="relative flex items-center gap-2">
         <div className="relative flex-1">
+          <Search className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
           <textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Chat with your data in natural language..."
-            className="w-full px-4 py-3 pl-3 bg-white/5 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-[200px] min-h-[44px] overflow-y-auto"
+            className="w-full px-4 py-3 pl-10 bg-white/5 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-[200px] min-h-[44px] overflow-y-auto"
             disabled={isLoading}
             rows={1}
             onInput={(e) => {
               const target = e.target as HTMLTextAreaElement;
               target.style.height = 'auto';
-              const newHeight = Math.min(target.scrollHeight, 200); // Limit to 200px
+              const newHeight = Math.min(target.scrollHeight, 200);
               target.style.height = `${newHeight}px`;
             }}
-          >
-            <Search className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-          </textarea>
+          />
         </div>
         <button
           type={isLoading ? 'button' : 'submit'}
