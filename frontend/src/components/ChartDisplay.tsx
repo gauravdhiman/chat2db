@@ -173,67 +173,90 @@ export function ChartDisplay(chartConfig: ChartConfig) {
         );
 
       case 'pie':
+        // Transform data for pie chart format
+        const pieData = chartConfig.data.map(item => ({
+          name: item.x,
+          value: Object.values(item.y)[0]
+        }));
+
         return (
           <PieChart {...commonProps}>
             <Pie
-              data={chartConfig.data}
-              dataKey="y"
-              nameKey="x"
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
               cx="50%"
               cy="50%"
               outerRadius={150}
+              innerRadius={0}
+              paddingAngle={0.5}
               label={({
                 cx,
                 cy,
                 midAngle,
                 innerRadius,
                 outerRadius,
-                value,
-                index
+                percent,
+                name
               }) => {
                 const RADIAN = Math.PI / 180;
-                const radius = 25 + innerRadius + (outerRadius - innerRadius);
+                const radius = outerRadius + 25;
                 const x = cx + radius * Math.cos(-midAngle * RADIAN);
                 const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
                 return (
                   <text
                     x={x}
                     y={y}
-                    className="fill-gray-200 text-sm"
+                    fill="#fff"
                     textAnchor={x > cx ? 'start' : 'end'}
                     dominantBaseline="central"
                   >
-                    {`${chartConfig.data[index].x} (${value})`}
+                    {`${name} (${(percent * 100).toFixed(1)}%)`}
                   </text>
                 );
               }}
             >
-              {chartConfig.data.map((_, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              {pieData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]}
+                  strokeWidth={0.5}
+                  stroke="#374151"
+                />
               ))}
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1F2937',
+                backgroundColor: '#fff',
                 border: '1px solid #374151',
                 borderRadius: '0.5rem',
                 padding: '8px 12px',
-                color: '#ffffff',  // Ensuring text is white
-                fontSize: '14px'
+                color: '#ffffff',
+                fontSize: '14px',
+                fontWeight: 500,
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
               }}
-              formatter={(value, name) => [value, name]}
+              formatter={(value: number, name: string) => [
+                `Count: ${value.toLocaleString()}`,
+                `State: ${name}`
+              ]}
               labelStyle={{
                 color: '#ffffff',
                 fontWeight: 'bold',
                 marginBottom: '4px'
               }}
-              itemStyle={{
-                color: '#ffffff',  // Making item text white
-                padding: '2px 0'
-              }}
             />
             <Legend
-              formatter={(value) => <span className="text-gray-200">{value}</span>}
+              layout="horizontal"
+              verticalAlign="bottom"
+              align="center"
+              wrapperStyle={{
+                paddingTop: '20px'
+              }}
+              formatter={(value) => (
+                <span style={{ color: '#fff', fontSize: '14px' }}>{value}</span>
+              )}
             />
           </PieChart>
         );
