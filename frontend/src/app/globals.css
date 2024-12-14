@@ -16,22 +16,35 @@ body {
 
 /* Add table styles for markdown content */
 .prose table {
-  border-collapse: collapse;
   width: 100%;
-  margin: 1em 0;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
-.prose th,
-.prose td {
-  border: 1px solid rgb(75 85 99); /* gray-600 */
-  padding: 0.5rem;
-  text-align: left;
+.prose thead {
+  background-color: rgb(31 41 55); /* gray-800 */
 }
 
 .prose th {
-  background-color: rgb(31 41 55); /* gray-800 */
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid rgb(75 85 99); /* gray-600 */
+  color: rgb(243 244 246); /* gray-100 */
+}
+
+.prose td {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgb(75 85 99); /* gray-600 */
+  color: rgb(209 213 219); /* gray-300 */
 }
 
 .prose tr:nth-child(even) {
   background-color: rgb(17 24 39 / 0.3); /* gray-900 with opacity */
+}
+
+.prose tr:hover {
+  background-color: rgb(31 41 55 / 0.5); /* gray-800 with opacity */
 }
